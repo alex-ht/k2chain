@@ -2,8 +2,13 @@ import k2
 
 def __make_chain_graph(symbols: k2.RaggedTensor,
                        device: Optional[Union[torch.device, str]] = "cpu") ->Fsa:
-    if not isinstance()
-    
+    symbols.
+
+def expand_table(symbol_table: k2.SymbolTable) -> k2.SymbolTable:
+    for s in symbol_table.symbols:
+      symbol_table.add("#" + s)
+    return symbol_table
+
 def chain_graph(symbols: Union[List[List[int]], k2.RaggedTensor],
               device: Optional[Union[torch.device, str]] = "cpu") -> Fsa:
     '''Construct chain graphs from symbols.
