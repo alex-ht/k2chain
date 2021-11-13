@@ -1,3 +1,0 @@
-namespace k2chain {
-    
-}
