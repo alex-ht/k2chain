@@ -1,9 +1,8 @@
 import k2
 
 def _chain_expand_table(symbols: k2.SymbolTable) -> k2.SymbolTable:
-    for i, s in enumerate(symbols.symbols):
-      if i > 0:
-        symbols.add("#" + s)
+    for s in symbols.symbols()[1:]:
+      symbols.add("#" + s)
     return symbols
 
 def chain_topo(symbols: k2.SymbolTable,
