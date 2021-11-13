@@ -1,38 +1,32 @@
 import k2
 
-def __make_chain_graph(symbols: k2.RaggedTensor,
-                       device: Optional[Union[torch.device, str]] = "cpu") ->Fsa:
-    symbols.
+def _chain_expand_table(symbols: k2.SymbolTable) -> k2.SymbolTable:
+    for i, s in enumerate(symbols.symbols):
+      if i > 0:
+        symbols.add("#" + s)
+    return symbols
 
-def expand_table(symbol_table: k2.SymbolTable) -> k2.SymbolTable:
-    for s in symbol_table.symbols:
-      symbol_table.add("#" + s)
-    return symbol_table
-
-def chain_graph(symbols: Union[List[List[int]], k2.RaggedTensor],
-              device: Optional[Union[torch.device, str]] = "cpu") -> Fsa:
-    '''Construct chain graphs from symbols.
-    Note:
-      The scores of arcs in the returned FSA are all 0.
-    Args:
-      symbols:
-        It can be one of the following types:
-            - A list of list-of-integers, e..g, `[ [1, 2], [1, 2, 3] ]`
-            - An instance of :class:`k2.RaggedTensor`.
-              Must have `num_axes == 2`.
-      device:
-        Optional. It can be either a string (e.g., 'cpu', 'cuda:0') or a
-        torch.device.
-        By default, the returned FSA is on CPU.
-        If `symbols` is an instance of :class:`k2.RaggedTensor`, the returned
-        FSA will on the same device as `k2.RaggedTensor`.
-    Returns:
-        An FsaVec containing the returned chain graphs, with "Dim0()" the same as
-        "len(symbols)"(List[List[int]]) or "dim0"(k2.RaggedTensor)
-    '''
-    if not isinstance(symbols, k2.RaggedTensor):
-        symbols = k2.RaggedTensor(symbols, device=device)
-
-    ragged_arc, aux_labels = __make_chain_graph(symbols, device)
-    fsa = Fsa(ragged_arc, aux_labels=aux_labels)
-    return fsa
+def chain_topo(symbols: k2.SymbolTable,
+            device: Optional[Union[torch.device, str]] = None) -> k2.Fsa:
+  '''Create a Chain topology.
+  Args:
+    symbols:
+      We assume that token IDs are contiguous (from 1 to `max_token`).
+      0 represents <blk>.
+    device:
+      Optional. It can be either a string (e.g., 'cpu',
+      'cuda:0') or a torch.device.
+      If it is None, then the returned FSA is on CPU.
+  Returns:
+    Return Chain topology as an FSA and expanded symbol table.
+  '''
+  max_int = symbols.ids()[-1]
+  ext_symbols = _chain_expand_table(symbols)
+  fsa_str = [ "0 %d %d 0" % (s, s) for s in range(1, max_int+1)]
+  fsa_str += [ "%d %d %d 0" % (s, s*2, s*2) for s in range(1, max_int+1)]
+  fsa_str += [ "%d %d %d 0" % (s*2, s*2, s*2) for s in range(1, max_int+1)]
+  fsa_str += [ "%d 0 0 0" % (s) for s in range(1, max_int+1)]
+  fsa_str += [ "%d %d -1 0" % (s, max_int*2+1) for s in range(1, max_int+1)]
+  fsa_str += [ str(max_int*2+1) ]
+  fsa = k2.Fsa.from_str("\n".join(fsa_str))
+  return fsa, ext_symbols
