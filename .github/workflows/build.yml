@@ -25,13 +25,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Python Linter
-        # You may pin to the exact commit or the version.
-        # uses: sunnysid3up/python-linter@93076bd8f740f062069291d738fc70c1b4171c1d
-        uses: sunnysid3up/python-linter@v0.1-beta.7
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
         with:
-          # Source file or directory
-          source: "k2chain"
-          # Set strictness for lint [low, medium, high]
-          strict: "medium"
+          python-version: 3.8
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip typing_extensions
+          python3 -m pip install --upgrade flake8==3.8.3
+      - name: Run flake8
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 .
           
