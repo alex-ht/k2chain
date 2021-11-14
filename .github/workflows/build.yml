@@ -30,10 +30,16 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install Python dependencies
+      - name: Install k2
+        shell: bash
         run: |
-          python3 -m pip install --upgrade pip typing_extensions
-          python3 -m pip install --upgrade flake8==3.8.3
+          python3 -m pip install -q --upgrade pip
+          python3 -m pip install -q wheel twine typing_extensions
+          python3 -m pip install -q bs4 requests tqdm
+          python3 -m pip install -q flake8==3.8.3
+          python3 -m pip install -q k2
+          python3 -c "import torch; print('torch version:', torch.__version__)"
+
       - name: Run flake8
         shell: bash
         working-directory: ${{github.workspace}}

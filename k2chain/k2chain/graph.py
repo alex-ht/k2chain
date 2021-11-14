@@ -1,4 +1,5 @@
 import k2
+import torch
 
 def _chain_expand_table(symbols: k2.SymbolTable) -> k2.SymbolTable:
     for s in symbols.symbols()[1:]:
