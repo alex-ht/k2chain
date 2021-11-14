@@ -47,4 +47,9 @@ jobs:
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 .
-          
+      
+      - name: Build
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          python3 setup.py install
