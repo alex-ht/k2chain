@@ -35,5 +35,5 @@ def chain_topo(symbols: k2.SymbolTable,
     fsa_str += ["%d %d -1 0" % (s, max_int*2+1) for s in range(0, max_int+1)]
     fsa_str += ["%d %d -1 0" % (s*2, max_int*2+1) for s in range(0, max_int+1)]
     fsa_str += [str(max_int*2+1)]
-    fsa = k2.Fsa.from_str("\n".join(fsa_str))
+    fsa = k2.Fsa.from_str("\n".join(sorted(fsa_str)))
     return k2.arc_sort(fsa), ext_symbols
