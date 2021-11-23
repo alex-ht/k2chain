@@ -27,13 +27,14 @@ def chain_topo(symbols: k2.SymbolTable,
     blk = symbols.ids[-1]
     max_int = blk - 1
     ext_symbols = _chain_expand_table(symbols)
-    fsa_str = ["0 0 %d 0" % (blk)]
-    fsa_str += ["0 %d %d 0" % (s, s) for s in range(1, max_int+1)]
-    fsa_str += ["%d %d %d 0" % (s, s*2, s*2+1) for s in range(1, max_int+1)]
-    fsa_str += ["%d %d %d 0" % (s*2, s*2, s*2+1) for s in range(1, max_int+1)]
-    fsa_str += ["%d 0 0 0" % (s) for s in range(1, max_int+1)]
-    fsa_str += ["%d %d -1 0" % (s, max_int*2+1) for s in range(0, max_int+1)]
-    fsa_str += ["%d %d -1 0" % (s*2, max_int*2+1) for s in range(0, max_int+1)]
-    fsa_str += [str(max_int*2+1)]
-    fsa = k2.Fsa.from_str("\n".join(sorted(fsa_str)))
+    fsa_str = [[0, 0, blk, 0]]
+    fsa_str += [[0, s, s, 0] for s in range(1, max_int+1)]
+    fsa_str += [[s, s*2, s*2+1, 0] for s in range(1, max_int+1)]
+    fsa_str += [[s*2, s*2, s*2+1, 0] for s in range(1, max_int+1)]
+    fsa_str += [[s, 0, 0, 0] for s in range(1, max_int+1)]
+    fsa_str += [[s, max_int*2+1, -1, 0] for s in range(0, max_int+1)]
+    fsa_str += [[s*2, max_int*2+1, -1, 0] for s in range(0, max_int+1)]
+    fsa_str += [[max_int*2+1]]
+    fsa_str = [f"{x[0]} {x[1]} {x[2]} {x[3]}" for x in sorted(fsa_str)]
+    fsa = k2.Fsa.from_str("\n".join(fsa_str))
     return k2.arc_sort(fsa), ext_symbols
