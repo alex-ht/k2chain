@@ -24,7 +24,7 @@ def chain_topo(symbols: k2.SymbolTable,
     Returns:
         Return Chain topology as an FSA and expanded symbol table.
     '''
-    blk = symbols.ids()[-1]
+    blk = symbols.ids[-1]
     max_int = blk - 1
     ext_symbols = _chain_expand_table(symbols)
     fsa_str = ["0 0 %d 0" % (blk)]
