@@ -11,7 +11,7 @@ def _chain_expand_table(symbols: k2.SymbolTable) -> k2.SymbolTable:
 
 
 def chain_topo(symbols: k2.SymbolTable,
-               device: Optional[Union[torch.device, str]] = None) -> k2.Fsa:
+               device: Optional[Union[torch.device, str]] = None) -> k2.Fsa, k2.SymbolTable:
     '''Create a Chain topology.
     Args:
         symbols:
