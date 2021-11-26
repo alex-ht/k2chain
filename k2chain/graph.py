@@ -11,7 +11,7 @@ def _chain_expand_table(symbols: k2.SymbolTable) -> k2.SymbolTable:
 
 
 def chain_topo(symbols: k2.SymbolTable,
-               device: Optional[Union[torch.device, str]] = None) -> k2.Fsa, k2.SymbolTable:
+               device: Optional[Union[torch.device, str]] = None) -> k2.Fsa:
     '''Create a Chain topology.
     Args:
         symbols:
@@ -37,5 +37,6 @@ def chain_topo(symbols: k2.SymbolTable,
     fsa_str = [f"{x[0]} {x[1]} {x[2]} {x[3]} {x[4]}" for x in sorted(fsa_str)]
     fsa_str += [f"{max_int*2+1}"]
     fsa = k2.Fsa.from_openfst("\n".join(fsa_str), num_aux_labels=1, aux_label_names=symbols.symbols)
+    fsa.labels_sym = ext_symbols
     fsa = k2.arc_sort(fsa)
-    return fsa, ext_symbols
+    return fsa
