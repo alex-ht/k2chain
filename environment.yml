@@ -4,6 +4,7 @@ channels:
 - conda-forge
 dependencies:
 - k2
-- python=3.8
-- cudatoolkit=11.1
-- pytorch=1.8.1
+- python=3
+- cudatoolkit
+- pytorch
+- numpy
