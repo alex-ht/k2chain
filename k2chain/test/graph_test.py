@@ -1,5 +1,5 @@
 import k2
-from .graph import chain_topo
+from ..graph import chain_topo
 def test_compose():
     syms = k2.SymbolTable.from_str('<eps> 0\nA 1\nB 2\nC 3\n')
     fst_a = chain_topo(syms, 'cpu')
