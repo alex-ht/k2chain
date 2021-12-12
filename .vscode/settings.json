@@ -1,5 +1,6 @@
 {
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "yapf",
+    "python.pythonPath": "/home/admin/miniconda3/envs/k2chain/bin/python"
 }
